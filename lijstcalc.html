@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Lijstcalculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0d0d;
+  --panel: #161616;
+  --border: #2a2a2a;
+  --accent: #e8ff47;
+  --accent2: #ff6b35;
+  --text: #f0f0f0;
+  --muted: #666;
+  --dim: #4a9eff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px 16px 80px;
+}
+header { text-align: center; margin-bottom: 32px; }
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 10vw, 84px);
+  letter-spacing: 5px;
+  line-height: 1;
+  color: var(--text);
+}
+h1 span { color: var(--accent); }
+.subtitle {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.card {
+  width: 100%;
+  max-width: 580px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* INPUT GRID */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.input-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+.input-row label {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.input-row input {
+  padding: 10px 12px;
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.input-row input:focus { border-color: var(--accent); }
+
+.unit-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+.unit-row label { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.unit-btns { display: flex; gap: 6px; }
+.unit-btn {
+  padding: 8px 14px;
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.unit-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: bold; }
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+/* CALC BTN */
+.calc-btn {
+  width: 100%;
+  max-width: 580px;
+  padding: 16px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 20px;
+}
+.calc-btn:hover { filter: brightness(1.1); }
+.calc-btn:active { transform: scale(0.99); }
+
+/* RESULTS */
+.results { width: 100%; max-width: 580px; display: none; }
+.results.show { display: block; }
+
+.result-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.result-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+/* DIAGRAM */
+.diagram-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+canvas { display: block; }
+
+/* CUT TABLE */
+.cut-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+.cut-table th {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.cut-table td {
+  padding: 10px 10px;
+  font-size: 14px;
+  border-bottom: 1px solid #1a1a1a;
+}
+.cut-table tr:last-child td { border-bottom: none; }
+.cut-table .piece-label { color: var(--muted); font-size: 11px; }
+.cut-table .dim { color: var(--accent); font-weight: 500; font-size: 16px; }
+.cut-table .sub { color: var(--text); font-size: 12px; }
+
+/* TIPS */
+.tip-box {
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px;
+  margin-top: 12px;
+}
+.tip-box .tip-title {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.tip-box ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tip-box li {
+  font-size: 12px;
+  color: var(--text);
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+}
+.tip-box li::before { content: '→'; position: absolute; left: 0; color: var(--accent2); }
+
+/* TOTAL */
+.total-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.total-box { background: #0a0a0a; border-radius: 4px; padding: 12px; }
+.total-box .tlabel { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.total-box .tval { font-size: 20px; font-weight: 500; color: var(--accent); }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type=number] { -moz-appearance: textfield; }
+
+.error {
+  background: #1a0a08;
+  border: 1px solid var(--accent2);
+  border-radius: 4px;
+  padding: 12px 16px;
+  color: var(--accent2);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>LIJST<span>CALC</span></h1>
+  <p class="subtitle">Schilderijlijst maten calculator — 45° verstek</p>
+</header>
+
+<!-- EENHEID -->
+<div class="card">
+  <div class="card-title">Eenheid</div>
+  <div class="unit-row">
+    <label>Maat in</label>
+    <div class="unit-btns">
+      <button class="unit-btn active" onclick="setUnit('mm',this)">mm</button>
+      <button class="unit-btn" onclick="setUnit('cm',this)">cm</button>
+      <button class="unit-btn" onclick="setUnit('inch',this)">inch</button>
+    </div>
+  </div>
+</div>
+
+<!-- AFMETINGEN -->
+<div class="card">
+  <div class="card-title">Afmetingen in te lijsten werk</div>
+  <div class="input-group">
+    <div class="input-row">
+      <label>Breedte werk</label>
+      <input type="number" id="artW" placeholder="400" min="1" oninput="liveCalc()">
+    </div>
+    <div class="input-row">
+      <label>Hoogte werk</label>
+      <input type="number" id="artH" placeholder="300" min="1" oninput="liveCalc()">
+    </div>
+  </div>
+</div>
+
+<!-- LIJST PROFIEL -->
+<div class="card">
+  <div class="card-title">Lijstprofiel</div>
+  <div class="input-group">
+    <div class="input-row">
+      <label>Breedte lijst</label>
+      <input type="number" id="frameW" placeholder="40" min="1" oninput="liveCalc()">
+    </div>
+    <div class="input-row">
+      <label>Inkeping diepte</label>
+      <input type="number" id="rebateD" placeholder="5" min="0" oninput="liveCalc()">
+    </div>
+    <div class="input-row">
+      <label>Inkeping breedte</label>
+      <input type="number" id="rebateW" placeholder="10" min="0" oninput="liveCalc()">
+    </div>
+  </div>
+  <div class="tip-box" style="margin-top:14px">
+    <div class="tip-title">Uitleg profiel</div>
+    <ul>
+      <li><strong>Breedte lijst</strong> — totale breedte van het lijstprofiel</li>
+      <li><strong>Inkeping diepte</strong> — hoe diep het werk in de lijst valt</li>
+      <li><strong>Inkeping breedte</strong> — hoe ver het werk onder de lijst valt (overlap)</li>
+    </ul>
+  </div>
+</div>
+
+<button class="calc-btn" onclick="calculate()">BEREKEN MATEN</button>
+
+<div class="results" id="results"></div>
+
+<script>
+let unit = 'mm';
+
+function setUnit(u, btn) {
+  unit = u;
+  document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  liveCalc();
+}
+
+function unitLabel() { return unit; }
+
+function fmt(v) {
+  if (unit === 'mm') return Math.round(v * 10) / 10 + ' mm';
+  if (unit === 'cm') return Math.round(v / 10 * 10) / 10 + ' cm';
+  return Math.round(v / 25.4 * 100) / 100 + '"';
+}
+
+function fmtShort(v) {
+  if (unit === 'mm') return (Math.round(v * 10) / 10) + '';
+  if (unit === 'cm') return (Math.round(v / 10 * 10) / 10) + '';
+  return (Math.round(v / 25.4 * 100) / 100) + '';
+}
+
+// All values stored internally in mm
+function toMm(v) {
+  if (unit === 'cm') return v * 10;
+  if (unit === 'inch') return v * 25.4;
+  return v;
+}
+
+function liveCalc() {
+  const artW = parseFloat(document.getElementById('artW').value);
+  const artH = parseFloat(document.getElementById('artH').value);
+  const frameW = parseFloat(document.getElementById('frameW').value);
+  const rebateD = parseFloat(document.getElementById('rebateD').value) || 0;
+  const rebateWv = parseFloat(document.getElementById('rebateW').value) || 0;
+  if (artW && artH && frameW) calculate(true);
+}
+
+function calculate(silent = false) {
+  const artW_raw = parseFloat(document.getElementById('artW').value);
+  const artH_raw = parseFloat(document.getElementById('artH').value);
+  const frameW_raw = parseFloat(document.getElementById('frameW').value);
+  const rebateD_raw = parseFloat(document.getElementById('rebateD').value) || 0;
+  const rebateWv_raw = parseFloat(document.getElementById('rebateW').value) || 0;
+
+  const results = document.getElementById('results');
+
+  if (!artW_raw || !artH_raw || !frameW_raw) {
+    if (!silent) results.innerHTML = '<div class="error">Vul minimaal de breedte, hoogte en lijstbreedte in.</div>';
+    return;
+  }
+
+  // Convert to mm internally
+  const artW = toMm(artW_raw);
+  const artH = toMm(artH_raw);
+  const frameW = toMm(frameW_raw);
+  const rebateWmm = toMm(rebateWv_raw);
+
+  // The rabbet (inkeping) overlaps the artwork
+  // Inner edge of frame = artwork size (the rabbet grips the artwork)
+  // At 45°, the cut length = inner edge + 2 * (frameW - rabbet overlap) ... but we need:
+
+  // Inner dimension: the opening the artwork sits in
+  // Opening = artwork size (work fits snugly) or slightly larger if no tight fit
+  const openW = artW;  // inner width of frame opening
+  const openH = artH;  // inner height of frame opening
+
+  // Outer dimension of frame
+  const outerW = openW + 2 * frameW;
+  const outerH = openH + 2 * frameH(frameW);
+
+  function frameH(fw) { return fw; } // symmetric profile
+
+  // For 45° mitre:
+  // Short point (SP) = inner dimension
+  // Long point (LP) = inner dimension + 2 * frame width
+  // Each piece: short point on inside, long point on outside
+
+  // Horizontal pieces (top & bottom): 2 pieces
+  const hSP = openW;        // short point = inner width
+  const hLP = openW + 2 * frameW; // long point = outer
+
+  // Vertical pieces (left & right): 2 pieces
+  const vSP = openH;
+  const vLP = openH + 2 * frameW;
+
+  // Total length needed (with some waste per cut)
+  const kerfMm = 3; // zaagbreedte
+  const totalLength = 2 * (hLP + kerfMm) + 2 * (vLP + kerfMm);
+
+  results.innerHTML = '';
+  results.classList.add('show');
+
+  const div = document.createElement('div');
+  div.className = 'result-card';
+
+  // Draw diagram
+  div.innerHTML = `
+    <div class="result-title">ZAAGMATEN — 45° VERSTEK</div>
+    <div class="diagram-wrap"><canvas id="frameDiagram"></canvas></div>
+
+    <table class="cut-table">
+      <thead>
+        <tr>
+          <th>Stuk</th>
+          <th>Aantal</th>
+          <th>Korte punt (SP)</th>
+          <th>Lange punt (LP)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="piece-label">Horizontaal</span><br><span class="sub">Boven &amp; onder</span></td>
+          <td>2×</td>
+          <td><span class="dim">${fmt(hSP)}</span></td>
+          <td><span class="dim">${fmt(hLP)}</span></td>
+        </tr>
+        <tr>
+          <td><span class="piece-label">Verticaal</span><br><span class="sub">Links &amp; rechts</span></td>
+          <td>2×</td>
+          <td><span class="dim">${fmt(vSP)}</span></td>
+          <td><span class="dim">${fmt(vLP)}</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="total-row">
+      <div class="total-box">
+        <div class="tlabel">Totale lijstlengte</div>
+        <div class="tval">${fmt(totalLength)}</div>
+      </div>
+      <div class="total-box">
+        <div class="tlabel">Buitenmaat lijst</div>
+        <div class="tval">${fmtShort(hLP)} × ${fmtShort(vLP)} ${unitLabel()}</div>
+      </div>
+    </div>
+
+    ${rebateWmm > 0 ? `
+    <div class="total-row" style="margin-top:0">
+      <div class="total-box" style="grid-column:1/-1">
+        <div class="tlabel">Opening (zichtbaar werk)</div>
+        <div class="tval">${fmt(artW - 2*rebateWmm)} × ${fmt(artH - 2*rebateWmm)}</div>
+      </div>
+    </div>` : ''}
+
+    <div class="tip-box">
+      <div class="tip-title">Verstek tips</div>
+      <ul>
+        <li>Meet altijd aan de <strong>korte punt</strong> (binnenkant) voor nauwkeurigheid</li>
+        <li>Zaag eerst één hoek, meet dan de tegenovergestelde zijde af</li>
+        <li>Maak een proeflijst van goedkoop hout voor je de echte lijst zaagt</li>
+        <li>Korte punt = binnenmaat, lange punt = binnenmaat + 2× lijstbreedte</li>
+        ${rebateD_raw > 0 ? `<li>Inkeping ${fmt(toMm(rebateD_raw))} diep — zorg dat het werk goed valt vóór het lijmen</li>` : ''}
+      </ul>
+    </div>
+  `;
+
+  results.appendChild(div);
+
+  // Draw diagram
+  requestAnimationFrame(() => {
+    drawDiagram('frameDiagram', artW, artH, frameW, rebateWmm);
+  });
+
+  results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function drawDiagram(canvasId, artW, artH, frameW, rebateW) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  const maxW = Math.min(540, window.innerWidth - 64);
+  const totalW = artW + 2 * frameW;
+  const totalH = artH + 2 * frameW;
+  const scale = Math.min(maxW / totalW, 280 / totalH);
+
+  const W = totalW * scale;
+  const H = totalH * scale;
+  const pad = 40;
+  canvas.width  = W + pad * 2;
+  canvas.height = H + pad * 2;
+
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const ox = pad, oy = pad;
+  const fw = frameW * scale;
+  const aw = artW * scale;
+  const ah = artH * scale;
+  const rw = rebateW * scale;
+
+  // Frame (outer)
+  ctx.fillStyle = '#8B6914';
+  ctx.fillRect(ox, oy, W, H);
+
+  // 45° mitre lines at corners
+  ctx.strokeStyle = '#5a4008';
+  ctx.lineWidth = 1.5;
+  // Top-left
+  ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + fw, oy + fw); ctx.stroke();
+  // Top-right
+  ctx.beginPath(); ctx.moveTo(ox + W, oy); ctx.lineTo(ox + W - fw, oy + fw); ctx.stroke();
+  // Bottom-left
+  ctx.beginPath(); ctx.moveTo(ox, oy + H); ctx.lineTo(ox + fw, oy + H - fw); ctx.stroke();
+  // Bottom-right
+  ctx.beginPath(); ctx.moveTo(ox + W, oy + H); ctx.lineTo(ox + W - fw, oy + H - fw); ctx.stroke();
+
+  // Rebate area (inkeping)
+  if (rw > 0) {
+    ctx.fillStyle = '#6a4a08';
+    ctx.fillRect(ox + fw - rw, oy + fw - rw, aw + 2*rw, ah + 2*rw);
+  }
+
+  // Artwork opening
+  ctx.fillStyle = '#1a1a2e';
+  ctx.fillRect(ox + fw, oy + fw, aw, ah);
+
+  // Artwork label
+  ctx.fillStyle = '#4a9eff';
+  ctx.font = `${Math.max(9, Math.min(13, aw * 0.08))}px DM Mono, monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('WERK', ox + fw + aw/2, oy + fw + ah/2 - 8);
+  ctx.font = `${Math.max(8, Math.min(11, aw * 0.06))}px DM Mono, monospace`;
+  ctx.fillText(`${fmtShort(artW)} × ${fmtShort(artH)} ${unitLabel()}`, ox + fw + aw/2, oy + fw + ah/2 + 8);
+
+  // Frame width label (top)
+  ctx.strokeStyle = '#e8ff47';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3,3]);
+  ctx.beginPath();
+  ctx.moveTo(ox, oy - 8);
+  ctx.lineTo(ox + fw, oy - 8);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Arrow + label for frame width
+  ctx.fillStyle = '#e8ff47';
+  ctx.font = '9px DM Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(fmt(frameW), ox + fw/2, oy - 18);
+
+  // Outer dimension line (bottom)
+  ctx.strokeStyle = '#ff6b35';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4,3]);
+  ctx.beginPath();
+  ctx.moveTo(ox, oy + H + 10);
+  ctx.lineTo(ox + W, oy + H + 10);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Short point line (inner)
+  ctx.strokeStyle = '#aaffaa';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([2,4]);
+  ctx.beginPath();
+  ctx.moveTo(ox + fw, oy + H + 20);
+  ctx.lineTo(ox + fw + aw, oy + H + 20);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Labels bottom
+  ctx.font = '9px DM Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ff6b35';
+  ctx.fillText(`LP: ${fmt(artW + 2*frameW)}`, ox + W/2, oy + H + 22);
+  ctx.fillStyle = '#aaffaa';
+  ctx.fillText(`SP: ${fmt(artW)}`, ox + fw + aw/2, oy + H + 32);
+
+  // Right side: vertical LP
+  ctx.save();
+  ctx.translate(ox + W + 18, oy + H/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#ff6b35';
+  ctx.font = '9px DM Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(`LP: ${fmt(artH + 2*frameW)}`, 0, 0);
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(ox + W + 28, oy + fw + ah/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#aaffaa';
+  ctx.font = '9px DM Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(`SP: ${fmt(artH)}`, 0, 0);
+  ctx.restore();
+
+  // Legend
+  const ly = oy + H + 44;
+  ctx.font = '9px DM Mono, monospace';
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#ff6b35'; ctx.fillText('■', ox, ly); ctx.fillStyle = '#888'; ctx.fillText(' Lange punt (LP)', ox + 10, ly);
+  ctx.fillStyle = '#aaffaa'; ctx.fillText('■', ox + 130, ly); ctx.fillStyle = '#888'; ctx.fillText(' Korte punt (SP)', ox + 140, ly);
+}
+
+// Live update on load
+window.addEventListener('load', () => {
+  document.getElementById('artW').value = '';
+  document.getElementById('artH').value = '';
+  document.getElementById('frameW').value = '';
+  document.getElementById('rebateD').value = '';
+  document.getElementById('rebateW').value = '';
+});
+</script>
+</body>
+</html>
