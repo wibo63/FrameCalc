@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FrameCalc</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FrameCalc">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0d0d;
+  --panel: #161616;
+  --border: #2a2a2a;
+  --accent: #e8ff47;
+  --accent2: #ff6b35;
+  --text: #f0f0f0;
+  --muted: #666;
+  --dim: #4a9eff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px 16px 80px;
+}
+header { text-align: center; margin-bottom: 32px; }
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 10vw, 84px);
+  letter-spacing: 5px;
+  line-height: 1;
+  color: var(--text);
+}
+h1 span { color: var(--accent); }
+.subtitle {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.card {
+  width: 100%;
+  max-width: 580px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* INPUT GRID */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.input-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+.input-row label {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.input-row input {
+  padding: 10px 12px;
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.input-row input:focus { border-color: var(--accent); }
+
+.unit-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+.unit-row label { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.unit-btns { display: flex; gap: 6px; }
+.unit-btn {
+  padding: 8px 14px;
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.unit-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: bold; }
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+/* CALC BTN */
+.calc-btn {
+  width: 100%;
+  max-width: 580px;
+  padding: 16px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 20px;
+}
+.calc-btn:hover { filter: brightness(1.1); }
+.calc-btn:active { transform: scale(0.99); }
+
+/* RESULTS */
+.results { width: 100%; max-width: 580px; display: none; }
+.results.show { display: block; }
+
+.result-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.result-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+/* DIAGRAM */
+.diagram-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+canvas { display: block; }
+
+/* CUT TABLE */
+.cut-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+.cut-table th {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.cut-table td {
+  padding: 10px 10px;
+  font-size: 14px;
+  border-bottom: 1px solid #1a1a1a;
+}
+.cut-table tr:last-child td { border-bottom: none; }
+.cut-table .piece-label { color: var(--muted); font-size: 11px; }
+.cut-table .dim { color: var(--accent); font-weight: 500; font-size: 16px; }
+.cut-table .sub { color: var(--text); font-size: 12px; }
+
+/* TIPS */
+.tip-box {
+  background: #0a0a0a;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px;
+  margin-top: 12px;
+}
+.tip-box .tip-title {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.tip-box ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tip-box li {
+  font-size: 12px;
+  color: var(--text);
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+}
+.tip-box li::before { content: '→'; position: absolute; left: 0; color: var(--accent2); }
+
+/* TOTAL */
+.total-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.total-box { background: #0a0a0a; border-radius: 4px; padding: 12px; }
+.total-box .tlabel { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.total-box .tval { font-size: 20px; font-weight: 500; color: var(--accent); }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* PRINT BUTTON */
+.print-btn {
+  width: 100%;
+  max-width: 580px;
+  padding: 14px;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 16px;
+  display: none;
+}
+.print-btn.show { display: block; }
+.print-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── PRINT STYLES ── */
+@media print {
+  @page { size: A4 portrait; margin: 10mm 10mm 10mm 10mm; }
+
+  /* Hide the entire app — only show the print preview content */
+  body > * { display: none !important; }
+
+  /* Show only the print preview */
+  #printPreview { display: block !important; width: 100% !important; max-width: 100% !important; }
+  #printPreview > div:first-child { display: none !important; }
+  #printPreviewContent { padding: 0 !important; border: none !important; background: white !important; color: #111 !important; }
+
+  /* Compact everything for print */
+  .ps-header  { padding-bottom: 6px !important; margin-bottom: 8px !important; }
+  .ps-title   { font-size: 24px !important; }
+  .ps-grid    { gap: 8px !important; margin-bottom: 8px !important; }
+  .ps-box     { padding: 8px !important; margin-bottom: 8px !important; page-break-inside: avoid; }
+  .ps-box table { font-size: 10px !important; }
+  .ps-box th  { font-size: 8px !important; padding: 3px 5px !important; }
+  .ps-box td  { padding: 4px 5px !important; font-size: 10px !important; }
+  .ps-section-title { font-size: 7px !important; margin-bottom: 5px !important; padding-bottom: 3px !important; }
+  .big        { font-size: 14px !important; }
+  .lbl        { font-size: 8px !important; }
+
+  /* Diagram: schaal via CSS, altijd passend */
+  .ps-diagram { page-break-inside: avoid; page-break-before: avoid; page-break-after: always; margin-bottom: 6px !important; }
+  .ps-diagram canvas, .ps-diagram img { max-width: 55% !important; max-height: 130px !important; width: auto !important; height: auto !important; display: block; margin: 0 auto; }
+
+  /* Checklist pagina 2 */
+  .ps-checklist li { font-size: 10px !important; padding: 4px 0 !important; }
+  .ps-footer  { font-size: 8px !important; page-break-before: avoid; }
+}
+
+
+/* Print content styles — used in both #printSheet and #printPreviewContent */
+.ps-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 20px; }
+.ps-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 4px; color: #111; line-height: 1; }
+.ps-title span { color: #c8401a; }
+.ps-subtitle { font-size: 10px; letter-spacing: 2px; color: #666; text-transform: uppercase; margin-top: 4px; }
+.ps-date { font-size: 10px; color: #888; text-align: right; line-height: 1.8; }
+.ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.ps-section-title { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: #888; font-weight: bold; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #ddd; }
+.ps-box { border: 1px solid #ddd; border-radius: 4px; padding: 14px; margin-bottom: 14px; }
+.ps-box table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ps-box th { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #888; text-align: left; padding: 5px 8px; border-bottom: 1px solid #ddd; }
+.ps-box td { padding: 8px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+.ps-box tr:last-child td { border-bottom: none; }
+.big { font-size: 20px; font-weight: bold; }
+.lbl { font-size: 10px; color: #888; display: block; margin-bottom: 2px; }
+.ps-diagram { text-align: center; margin-bottom: 16px; }
+.ps-diagram img, .ps-diagram canvas { max-width: 100%; border: 1px solid #ddd; border-radius: 4px; }
+.ps-footer { border-top: 1px solid #ddd; padding-top: 8px; font-size: 9px; color: #aaa; letter-spacing: 1px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
+.ps-checklist { list-style: none; }
+.ps-checklist li { padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 12px; display: flex; align-items: center; gap: 10px; }
+.ps-checklist li::before { content: '☐'; font-size: 16px; color: #888; flex-shrink: 0; }
+
+.share-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  transition: transform 0.15s;
+  z-index: 100;
+}
+.share-btn:hover { transform: scale(1.1); }
+
+/* QR MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 300px;
+  width: 90%;
+  animation: popIn 0.2s ease;
+}
+@keyframes popIn {
+  from { transform: scale(0.85); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+.modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--accent);
+}
+.modal-subtitle { font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+#qrCode { background: white; padding: 14px; border-radius: 8px; }
+.modal-url { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-align: center; word-break: break-all; }
+.modal-close {
+  padding: 10px 24px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.15s;
+}
+.modal-close:hover { border-color: var(--accent2); color: var(--accent2); }
+
+.error {
+  background: #1a0a08;
+  border: 1px solid var(--accent2);
+  border-radius: 4px;
+  padding: 12px 16px;
+  color: var(--accent2);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>FRAME<span>CALC</span></h1>
+  <p class="subtitle">Schilderijlijst maten calculator — 45° verstek</p>
+</header>
+
+<!-- EENHEID -->
+<div class="card">
+  <div class="card-title">Eenheid</div>
+  <div class="unit-row">
+    <label>Maat in</label>
+    <div class="unit-btns">
+      <button class="unit-btn active" onclick="setUnit('mm',this)">mm</button>
+      <button class="unit-btn" onclick="setUnit('cm',this)">cm</button>
+      <button class="unit-btn" onclick="setUnit('inch',this)">inch</button>
+    </div>
+  </div>
+</div>
+
+<!-- AFMETINGEN -->
+<div class="card">
+  <div class="card-title">Afmetingen in te lijsten werk</div>
+  <div class="input-group">
+    <div class="input-row">
+      <label>Breedte werk</label>
+      <input type="number" id="artW" placeholder="400" min="1" oninput="liveCalc()">
+    </div>
+    <div class="input-row">
+      <label>Hoogte werk</label>
+      <input type="number" id="artH" placeholder="300" min="1" oninput="liveCalc()">
+    </div>
+    <div class="input-row">
+      <label>Marge per kant</label>
+      <input type="number" id="margin" placeholder="2" min="0" value="2" oninput="liveCalc()">
+    </div>
+  </div>
+  <div class="tip-box" style="margin-top:14px">
+    <div class="tip-title">Marge</div>
+    <ul>
+      <li>Extra speelruimte per kant zodat het werk makkelijk in de lijst past</li>
+    </ul>
+  </div>
+</div>
+
+<!-- LIJST PROFIEL -->
+<div class="card">
+  <div class="card-title">Lijstprofiel</div>
+  <div class="input-group">
+    <div class="input-row">
+      <label>Dikte lijst</label>
+      <input type="number" id="frameT" placeholder="18" min="1" oninput="liveCalc()">
+    </div>
+    <div class="input-row">
+      <label>Breedte lijst</label>
+      <input type="number" id="frameW" placeholder="40" min="1" oninput="liveCalc()">
+    </div>
+    <div class="input-row">
+      <label>Inkeping diepte</label>
+      <input type="number" id="rebateD" placeholder="5" min="0" oninput="liveCalc()">
+    </div>
+    <div class="input-row">
+      <label>Inkeping breedte</label>
+      <input type="number" id="rebateW" placeholder="10" min="0" oninput="liveCalc()">
+    </div>
+  </div>
+  <div class="tip-box" style="margin-top:14px">
+    <div class="tip-title">Uitleg profiel</div>
+    <ul>
+      <li><strong>Breedte lijst</strong> — totale breedte van het lijstprofiel</li>
+      <li><strong>Inkeping diepte</strong> — hoe diep het werk in de lijst valt</li>
+      <li><strong>Inkeping breedte</strong> — hoe ver het werk onder de lijst valt (overlap)</li>
+    </ul>
+  </div>
+</div>
+
+<button class="calc-btn" onclick="calculate()">BEREKEN MATEN</button>
+
+<button class="print-btn" id="printBtn" onclick="showPrintPreview()">🖨 Toon printvoorbeeld</button>
+
+<div class="results" id="results"></div>
+
+<!-- Inline print preview -->
+<div id="printPreview" style="display:none; width:100%; max-width:580px; margin-bottom:24px;">
+  <div style="background:#1a1a1a; border:1px solid #333; border-radius:4px; padding:12px 16px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+    <span style="font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#666; flex:1; min-width:120px;">Printvoorbeeld</span>
+    <div style="display:flex; gap:8px;">
+      <button onclick="printOrShare()" style="background:var(--accent); border:none; color:#000; font-family:'DM Mono',monospace; font-size:11px; font-weight:bold; padding:8px 16px; border-radius:3px; cursor:pointer; letter-spacing:1px; white-space:nowrap;">🖨 Afdrukken / Delen</button>
+      <button onclick="hidePrintPreview()" style="background:none; border:1px solid #444; color:#888; font-family:'DM Mono',monospace; font-size:11px; padding:8px 12px; border-radius:3px; cursor:pointer; white-space:nowrap;">✕</button>
+    </div>
+  </div>
+  <div id="printPreviewContent" style="background:white; color:#111; padding:24px; border-radius:4px; border:1px solid #333; font-family:'DM Mono',monospace;"></div>
+</div>
+
+<!-- Hidden print data -->
+<div id="printSheet" style="display:none"></div>
+
+<!-- QR share button -->
+<button class="share-btn" onclick="openQR()" title="Deel app">⬡</button>
+
+<!-- QR Modal -->
+<div class="modal-overlay" id="qrModal" onclick="closeQR(event)">
+  <div class="modal-box">
+    <div class="modal-title">DEEL APP</div>
+    <div class="modal-subtitle">Scan met je telefoon</div>
+    <div id="qrCode"></div>
+    <div class="modal-url">wibo63.github.io/FrameCalc</div>
+    <button class="modal-close" onclick="closeModal()">Sluiten</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+let unit = 'mm';
+
+function setUnit(u, btn) {
+  unit = u;
+  document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  liveCalc();
+}
+
+function unitLabel() { return unit; }
+
+function fmt(v) {
+  if (unit === 'mm') return Math.round(v * 10) / 10 + ' mm';
+  if (unit === 'cm') return Math.round(v / 10 * 10) / 10 + ' cm';
+  return Math.round(v / 25.4 * 100) / 100 + '"';
+}
+
+function fmtShort(v) {
+  if (unit === 'mm') return (Math.round(v * 10) / 10) + '';
+  if (unit === 'cm') return (Math.round(v / 10 * 10) / 10) + '';
+  return (Math.round(v / 25.4 * 100) / 100) + '';
+}
+
+// All values stored internally in mm
+function toMm(v) {
+  if (unit === 'cm') return v * 10;
+  if (unit === 'inch') return v * 25.4;
+  return v;
+}
+
+function liveCalc() {
+  const artW = parseFloat(document.getElementById('artW').value);
+  const artH = parseFloat(document.getElementById('artH').value);
+  const frameW = parseFloat(document.getElementById('frameW').value);
+  const frameT = parseFloat(document.getElementById('frameT').value) || 0;
+  const rebateD = parseFloat(document.getElementById('rebateD').value) || 0;
+  const rebateWv = parseFloat(document.getElementById('rebateW').value) || 0;
+  const margin = parseFloat(document.getElementById('margin').value) || 0;
+  if (artW && artH && frameW) calculate(true);
+}
+
+function calculate(silent = false) {
+  const artW_raw = parseFloat(document.getElementById('artW').value);
+  const artH_raw = parseFloat(document.getElementById('artH').value);
+  const frameW_raw = parseFloat(document.getElementById('frameW').value);
+  const frameT_raw = parseFloat(document.getElementById('frameT').value) || 0;
+  const rebateD_raw = parseFloat(document.getElementById('rebateD').value) || 0;
+  const rebateWv_raw = parseFloat(document.getElementById('rebateW').value) || 0;
+  const margin_raw = parseFloat(document.getElementById('margin').value) || 0;
+
+  const results = document.getElementById('results');
+
+  if (!artW_raw || !artH_raw || !frameW_raw) {
+    if (!silent) results.innerHTML = '<div class="error">Vul minimaal de breedte, hoogte en lijstbreedte in.</div>';
+    return;
+  }
+
+  // Convert to mm internally
+  const artW_orig = toMm(artW_raw);
+  const artH_orig = toMm(artH_raw);
+  const marginMm = toMm(margin_raw);
+  const artW = artW_orig + 2 * marginMm;  // werk + marge aan beide kanten
+  const artH = artH_orig + 2 * marginMm;
+  const frameW = toMm(frameW_raw);
+  const frameT = toMm(frameT_raw);
+  const rebateWmm = toMm(rebateWv_raw);
+
+  // ── Correcte verstek berekening ──────────────────────────────
+  //
+  // Het werk valt IN de inkeping. De inkeping heeft een breedte (overlap)
+  // die bepaalt hoeveel de lijst over het werk heen valt.
+  //
+  // SP (korte punt, binnenkant lijst) = werkmaat - 2 × inkepingbreedte
+  //   → Dit is de opening waar het werk doorheen valt
+  //   → Als er geen inkeping is: SP = werkmaat (werk valt strak in lijst)
+  //
+  // LP (lange punt, buitenkant lijst) = SP + 2 × lijstbreedte
+  //
+  // Opening (zichtbaar deel werk) = SP = werkmaat - 2 × inkepingbreedte
+
+  // SP = de opening van de lijst (binnenkant verstek)
+  const hSP = artW - 2 * rebateWmm;   // breedte opening
+  const vSP = artH - 2 * rebateWmm;   // hoogte opening
+
+  // LP = buitenmaat van de lijst
+  const hLP = hSP + 2 * frameW;
+  const vLP = vSP + 2 * frameW;
+
+  // Zichtbare opening (wat je van het werk ziet)
+  const visibleW = hSP;
+  const visibleH = vSP;
+
+  // Totale benodigde lijstlengte (incl. 3mm zaagverlies per stuk)
+  const kerfMm = 3;
+  const totalLength = 2 * (hLP + kerfMm) + 2 * (vLP + kerfMm);
+
+  // Profielberekening (optioneel)
+  const benodigdeLat = frameT > 0 ? Math.ceil(totalLength / 10) * 10 : null;
+
+  results.innerHTML = '';
+  results.classList.add('show');
+
+  const div = document.createElement('div');
+  div.className = 'result-card';
+
+  // Draw diagram
+  div.innerHTML = `
+    <div class="result-title">ZAAGMATEN — 45° VERSTEK</div>
+    <div class="diagram-wrap"><canvas id="frameDiagram"></canvas></div>
+
+    <table class="cut-table">
+      <thead>
+        <tr>
+          <th>Stuk</th>
+          <th>Aantal</th>
+          <th>Korte punt (SP)</th>
+          <th>Lange punt (LP)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="piece-label">Horizontaal</span><br><span class="sub">Boven &amp; onder</span></td>
+          <td>2×</td>
+          <td><span class="dim">${fmt(hSP)}</span></td>
+          <td><span class="dim">${fmt(hLP)}</span></td>
+        </tr>
+        <tr>
+          <td><span class="piece-label">Verticaal</span><br><span class="sub">Links &amp; rechts</span></td>
+          <td>2×</td>
+          <td><span class="dim">${fmt(vSP)}</span></td>
+          <td><span class="dim">${fmt(vLP)}</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="total-row">
+      <div class="total-box">
+        <div class="tlabel">Totale lijstlengte</div>
+        <div class="tval">${fmt(totalLength)}</div>
+      </div>
+      <div class="total-box">
+        <div class="tlabel">Buitenmaat lijst</div>
+        <div class="tval">${fmtShort(hLP)} × ${fmtShort(vLP)} ${unitLabel()}</div>
+      </div>
+    </div>
+
+    ${frameT > 0 ? `
+    <div class="total-row" style="margin-top:0">
+      <div class="total-box">
+        <div class="tlabel">Profielafmeting</div>
+        <div class="tval">${fmt(frameW)} × ${fmt(frameT)}</div>
+      </div>
+      <div class="total-box">
+        <div class="tlabel">Benodigde lat</div>
+        <div class="tval">${fmt(frameT)} × ${fmt(frameW)} × ${fmt(benodigdeLat)}</div>
+      </div>
+    </div>` : ''}
+
+    ${rebateWmm > 0 ? `
+    <div class="total-row" style="margin-top:0">
+      <div class="total-box" style="grid-column:1/-1">
+        <div class="tlabel">Opening (zichtbaar werk)</div>
+        <div class="tval">${fmt(visibleW)} × ${fmt(visibleH)}</div>
+      </div>
+    </div>` : ''}
+
+    <div class="tip-box">
+      <div class="tip-title">Verstek tips</div>
+      <ul>
+        <li>Meet altijd aan de <strong>korte punt</strong> (binnenkant) voor nauwkeurigheid</li>
+        <li>Zaag eerst één hoek, meet dan de tegenovergestelde zijde af</li>
+        <li>Maak een proeflijst van goedkoop hout voor je de echte lijst zaagt</li>
+        <li>Korte punt = binnenmaat, lange punt = binnenmaat + 2× lijstbreedte</li>
+        ${rebateD_raw > 0 ? `<li>Inkeping ${fmt(toMm(rebateD_raw))} diep — zorg dat het werk goed valt vóór het lijmen</li>` : ''}
+      </ul>
+    </div>
+  `;
+
+  results.appendChild(div);
+
+  // Draw diagram
+  requestAnimationFrame(() => {
+    drawDiagram('frameDiagram', artW, artH, frameW, rebateWmm, hSP, hLP, vSP, vLP);
+  });
+
+  results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // Show print button
+  document.getElementById('printBtn').classList.add('show');
+
+  // Build print sheet
+  buildPrintSheet(artW_orig, artH_orig, marginMm, frameW, frameT, rebateWmm, hSP, hLP, vSP, vLP, totalLength, visibleW, visibleH);
+}
+
+function drawDiagram(canvasId, artW, artH, frameW, rebateW, hSP, hLP, vSP, vLP) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  const maxW = Math.min(540, window.innerWidth - 64);
+  const totalW = artW + 2 * frameW;
+  const totalH = artH + 2 * frameW;
+  const scale = Math.min(maxW / totalW, 280 / totalH);
+
+  const W = totalW * scale;
+  const H = totalH * scale;
+  const pad = 40;
+  canvas.width  = W + pad * 2;
+  canvas.height = H + pad * 2;
+
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const ox = pad, oy = pad;
+  const fw = frameW * scale;
+  const aw = artW * scale;
+  const ah = artH * scale;
+  const rw = rebateW * scale;
+
+  // Frame (outer)
+  ctx.fillStyle = '#8B6914';
+  ctx.fillRect(ox, oy, W, H);
+
+  // 45° mitre lines at corners
+  ctx.strokeStyle = '#5a4008';
+  ctx.lineWidth = 1.5;
+  // Top-left
+  ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + fw, oy + fw); ctx.stroke();
+  // Top-right
+  ctx.beginPath(); ctx.moveTo(ox + W, oy); ctx.lineTo(ox + W - fw, oy + fw); ctx.stroke();
+  // Bottom-left
+  ctx.beginPath(); ctx.moveTo(ox, oy + H); ctx.lineTo(ox + fw, oy + H - fw); ctx.stroke();
+  // Bottom-right
+  ctx.beginPath(); ctx.moveTo(ox + W, oy + H); ctx.lineTo(ox + W - fw, oy + H - fw); ctx.stroke();
+
+  // Rebate area (inkeping)
+  if (rw > 0) {
+    ctx.fillStyle = '#6a4a08';
+    ctx.fillRect(ox + fw - rw, oy + fw - rw, aw + 2*rw, ah + 2*rw);
+  }
+
+  // Artwork opening
+  ctx.fillStyle = '#1a1a2e';
+  ctx.fillRect(ox + fw, oy + fw, aw, ah);
+
+  // Artwork label
+  ctx.fillStyle = '#4a9eff';
+  ctx.font = `${Math.max(9, Math.min(13, aw * 0.08))}px DM Mono, monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('WERK', ox + fw + aw/2, oy + fw + ah/2 - 8);
+  ctx.font = `${Math.max(8, Math.min(11, aw * 0.06))}px DM Mono, monospace`;
+  ctx.fillText(`${fmtShort(artW)} × ${fmtShort(artH)} ${unitLabel()}`, ox + fw + aw/2, oy + fw + ah/2 + 8);
+
+  // Frame width label (top)
+  ctx.strokeStyle = '#e8ff47';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3,3]);
+  ctx.beginPath();
+  ctx.moveTo(ox, oy - 8);
+  ctx.lineTo(ox + fw, oy - 8);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Arrow + label for frame width
+  ctx.fillStyle = '#e8ff47';
+  ctx.font = '9px DM Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(fmt(frameW), ox + fw/2, oy - 18);
+
+  // Outer dimension line (bottom)
+  ctx.strokeStyle = '#ff6b35';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4,3]);
+  ctx.beginPath();
+  ctx.moveTo(ox, oy + H + 10);
+  ctx.lineTo(ox + W, oy + H + 10);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Short point line (inner)
+  ctx.strokeStyle = '#aaffaa';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([2,4]);
+  ctx.beginPath();
+  ctx.moveTo(ox + fw, oy + H + 20);
+  ctx.lineTo(ox + fw + aw, oy + H + 20);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Labels bottom
+  ctx.font = '9px DM Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ff6b35';
+  ctx.fillText(`LP: ${fmt(hLP)}`, ox + W/2, oy + H + 22);
+  ctx.fillStyle = '#aaffaa';
+  ctx.fillText(`SP: ${fmt(hSP)}`, ox + fw + aw/2, oy + H + 32);
+
+  // Right side: vertical LP
+  ctx.save();
+  ctx.translate(ox + W + 18, oy + H/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#ff6b35';
+  ctx.font = '9px DM Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(`LP: ${fmt(vLP)}`, 0, 0);
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(ox + W + 28, oy + fw + ah/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#aaffaa';
+  ctx.font = '9px DM Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(`SP: ${fmt(vSP)}`, 0, 0);
+  ctx.restore();
+
+  // Legend
+  const ly = oy + H + 44;
+  ctx.font = '9px DM Mono, monospace';
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#ff6b35'; ctx.fillText('■', ox, ly); ctx.fillStyle = '#888'; ctx.fillText(' Lange punt (LP)', ox + 10, ly);
+  ctx.fillStyle = '#aaffaa'; ctx.fillText('■', ox + 130, ly); ctx.fillStyle = '#888'; ctx.fillText(' Korte punt (SP)', ox + 140, ly);
+}
+
+// Print diagram uses same logic but with dark-on-white colors for print
+function drawPrintDiagram(canvasId, artW, artH, frameW, rebateW, hSP, hLP, vSP, vLP) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  const maxW = 280;
+  const totalW = artW + 2 * frameW;
+  const totalH = artH + 2 * frameW;
+  const scale = Math.min(maxW / totalW, 130 / totalH);
+
+  const W = totalW * scale;
+  const H = totalH * scale;
+  const pad = 40;
+  canvas.width  = W + pad * 2;
+  canvas.height = H + pad * 2;
+
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const ox = pad, oy = pad;
+  const fw = frameW * scale;
+  const aw = (artW - 2*rebateW) * scale; // visual opening
+  const ah = (artH - 2*rebateW) * scale;
+  const rw = rebateW * scale;
+
+  // Frame body
+  ctx.fillStyle = '#c8a96a';
+  ctx.fillRect(ox, oy, W, H);
+
+  // Mitre lines
+  ctx.strokeStyle = '#7a5a1a';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox+fw, oy+fw); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox+W, oy); ctx.lineTo(ox+W-fw, oy+fw); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox, oy+H); ctx.lineTo(ox+fw, oy+H-fw); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox+W, oy+H); ctx.lineTo(ox+W-fw, oy+H-fw); ctx.stroke();
+
+  // Rebate
+  if (rw > 0) {
+    ctx.fillStyle = '#a88040';
+    ctx.fillRect(ox+fw-rw, oy+fw-rw, aw+2*rw, ah+2*rw);
+  }
+
+  // Opening
+  ctx.fillStyle = '#e0e8f0';
+  ctx.strokeStyle = '#aaa';
+  ctx.lineWidth = 1;
+  ctx.fillRect(ox+fw, oy+fw, aw, ah);
+  ctx.strokeRect(ox+fw, oy+fw, aw, ah);
+
+  // Opening label
+  ctx.fillStyle = '#333';
+  ctx.font = `bold ${Math.max(9, Math.min(12, aw*0.07))}px DM Mono, monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('WERK', ox+fw+aw/2, oy+fw+ah/2 - 7);
+  ctx.font = `${Math.max(8, Math.min(10, aw*0.055))}px DM Mono, monospace`;
+  ctx.fillText(`${fmtShort(artW)} × ${fmtShort(artH)} ${unitLabel()}`, ox+fw+aw/2, oy+fw+ah/2+7);
+
+  // LP line bottom (red)
+  ctx.strokeStyle = '#c8401a'; ctx.lineWidth = 1.5; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(ox, oy+H+12); ctx.lineTo(ox+W, oy+H+12); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox, oy+H+8); ctx.lineTo(ox, oy+H+16); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox+W, oy+H+8); ctx.lineTo(ox+W, oy+H+16); ctx.stroke();
+  ctx.fillStyle = '#c8401a'; ctx.font = 'bold 10px DM Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText(`LP: ${fmt(hLP)}`, ox+W/2, oy+H+26);
+
+  // SP line bottom (green)
+  ctx.strokeStyle = '#2a7a3a'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(ox+fw, oy+H+36); ctx.lineTo(ox+fw+aw, oy+H+36); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(ox+fw, oy+H+32); ctx.lineTo(ox+fw, oy+H+40); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox+fw+aw, oy+H+32); ctx.lineTo(ox+fw+aw, oy+H+40); ctx.stroke();
+  ctx.fillStyle = '#2a7a3a'; ctx.textAlign = 'center';
+  ctx.fillText(`SP: ${fmt(hSP)}`, ox+fw+aw/2, oy+H+50);
+
+  // LP right (red)
+  ctx.save();
+  ctx.strokeStyle = '#c8401a'; ctx.lineWidth = 1.5; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(ox+W+12, oy); ctx.lineTo(ox+W+12, oy+H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox+W+8, oy); ctx.lineTo(ox+W+16, oy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox+W+8, oy+H); ctx.lineTo(ox+W+16, oy+H); ctx.stroke();
+  ctx.translate(ox+W+26, oy+H/2); ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#c8401a'; ctx.font = 'bold 10px DM Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText(`LP: ${fmt(vLP)}`, 0, 0);
+  ctx.restore();
+
+  // SP right (green)
+  ctx.save();
+  ctx.strokeStyle = '#2a7a3a'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(ox+W+36, oy+fw); ctx.lineTo(ox+W+36, oy+fw+ah); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(ox+W+32, oy+fw); ctx.lineTo(ox+W+40, oy+fw); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox+W+32, oy+fw+ah); ctx.lineTo(ox+W+40, oy+fw+ah); ctx.stroke();
+  ctx.translate(ox+W+48, oy+fw+ah/2); ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#2a7a3a'; ctx.font = '10px DM Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText(`SP: ${fmt(vSP)}`, 0, 0);
+  ctx.restore();
+
+  // Frame width label
+  ctx.strokeStyle = '#888'; ctx.setLineDash([2,3]); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(ox, oy-10); ctx.lineTo(ox+fw, oy-10); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#555'; ctx.font = '9px DM Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText(fmt(frameW), ox+fw/2, oy-20);
+
+  // Legend
+  ctx.font = '9px DM Mono, monospace'; ctx.textAlign = 'left';
+  ctx.fillStyle = '#c8401a'; ctx.fillText('── LP (Lange punt)', ox, oy+H+64);
+  ctx.fillStyle = '#2a7a3a'; ctx.fillText('- - SP (Korte punt)', ox+155, oy+H+64);
+}
+
+function buildPrintSheet(artW_orig, artH_orig, marginMm, frameW, frameT, rebateWmm, hSP, hLP, vSP, vLP, totalLength, visibleW, visibleH) {
+  const now = new Date().toLocaleDateString('nl-NL', { day:'2-digit', month:'2-digit', year:'numeric' });
+
+  const sheet = document.getElementById('printSheet');
+  sheet.innerHTML = `
+    <div class="ps-header">
+      <div>
+        <div class="ps-title">FRAME<span>CALC</span></div>
+        <div class="ps-subtitle">Schilderijlijst — 45° verstek zaagplan</div>
+      </div>
+      <div class="ps-date">
+        <div>Datum: ${now}</div>
+        <div>Eenheid: ${unitLabel()}</div>
+      </div>
+    </div>
+
+    <div class="ps-grid">
+      <div class="ps-box">
+        <div class="ps-section-title">Invoer afmetingen</div>
+        <table>
+          <tr><td><span class="lbl">Werk breedte</span><strong>${fmt(artW_orig)}</strong></td></tr>
+          <tr><td><span class="lbl">Werk hoogte</span><strong>${fmt(artH_orig)}</strong></td></tr>
+          ${marginMm > 0 ? `<tr><td><span class="lbl">Marge per kant</span><strong>${fmt(marginMm)}</strong></td></tr>` : ''}
+          ${marginMm > 0 ? `<tr><td><span class="lbl">Opening incl. marge</span><strong>${fmt(artW_orig + 2*marginMm)} × ${fmt(artH_orig + 2*marginMm)}</strong></td></tr>` : ''}
+          <tr><td><span class="lbl">Lijstbreedte</span><strong>${fmt(frameW)}</strong></td></tr>
+          ${rebateWmm > 0 ? `<tr><td><span class="lbl">Inkeping breedte (overlap)</span><strong>${fmt(rebateWmm)}</strong></td></tr>` : ''}
+          ${rebateWmm > 0 ? `<tr><td><span class="lbl">Zichtbare opening</span><strong>${fmt(visibleW)} × ${fmt(visibleH)}</strong></td></tr>` : ''}
+        </table>
+      </div>
+      <div class="ps-box">
+        <div class="ps-section-title">Materiaallijst</div>
+        <table>
+          <tr><td><span class="lbl">Totale lijstlengte</span><strong class="big">${fmt(totalLength)}</strong></td></tr>
+          <tr><td><span class="lbl">Buitenmaat lijst</span><strong>${fmt(hLP)} × ${fmt(vLP)}</strong></td></tr>
+          ${frameT > 0 ? `<tr><td><span class="lbl">Profielafmeting</span><strong>${fmt(frameW)} × ${fmt(frameT)}</strong></td></tr>` : ''}
+          <tr><td><span class="lbl">Aantal stukken</span><strong>4 stuks</strong></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="ps-box">
+      <div class="ps-section-title">Zaagmaten — 45° verstek</div>
+      <table>
+        <thead>
+          <tr><th>Stuk</th><th>Aantal</th><th>Korte punt (SP) — binnenkant</th><th>Lange punt (LP) — buitenkant</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Horizontaal</strong><br><span style="font-size:11px;color:#888">Boven &amp; onder</span></td>
+            <td>2×</td>
+            <td class="big">${fmt(hSP)}</td>
+            <td class="big">${fmt(hLP)}</td>
+          </tr>
+          <tr>
+            <td><strong>Verticaal</strong><br><span style="font-size:11px;color:#888">Links &amp; rechts</span></td>
+            <td>2×</td>
+            <td class="big">${fmt(vSP)}</td>
+            <td class="big">${fmt(vLP)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ps-diagram">
+      <div class="ps-section-title" style="text-align:left">Diagram</div>
+      <canvas id="printDiagram"></canvas>
+    </div>
+
+    <div class="ps-box">
+      <ul class="ps-checklist">
+        <li>Stel verstekzaag in op 45°</li>
+        <li>Zaag proefstukje en controleer hoek</li>
+        <li>Zaag horizontale stukken — SP: ${fmt(hSP)} / LP: ${fmt(hLP)}</li>
+        <li>Zaag verticale stukken — SP: ${fmt(vSP)} / LP: ${fmt(vLP)}</li>
+        <li>Pas samen droog (zonder lijm) — controleer haaksheid</li>
+        <li>Lijm en span op met hoekspanner of band</li>
+        <li>Laat minimaal 30 minuten uitharden</li>
+        ${rebateWmm > 0 ? `<li>Inkeping ${fmt(rebateWmm)} breed — werk valt ${fmt(rebateWmm)} onder de lijst</li>` : ''}
+      </ul>
+    </div>
+
+    <div class="ps-footer">
+      <span>FrameCalc — wibo63.github.io/FrameCalc</span>
+      <span>SP = korte punt (binnenkant) · LP = lange punt (buitenkant)</span>
+    </div>
+  `;
+
+  requestAnimationFrame(() => {
+    drawPrintDiagram('printDiagram', artW_orig + 2*marginMm, artH_orig + 2*marginMm, frameW, rebateWmm, hSP, hLP, vSP, vLP);
+  });
+}
+
+function showPrintPreview() {
+  const sheet = document.getElementById('printSheet');
+  const diagramCanvas = document.getElementById('printDiagram');
+  const diagramImg = diagramCanvas ? diagramCanvas.toDataURL('image/png') : '';
+
+  let html = sheet.innerHTML.replace(
+    /<canvas[^>]*id="printDiagram"[^>]*><\/canvas>/g,
+    `<img src="${diagramImg}" style="max-width:100%;border:1px solid #ddd;border-radius:4px;">`
+  );
+
+  document.getElementById('printPreviewContent').innerHTML = html;
+  document.getElementById('printPreview').style.display = 'block';
+  document.getElementById('printPreview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function printOrShare() {
+  // On mobile with Web Share API: generate a PDF-ready HTML blob and share it
+  if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+    const content = document.getElementById('printPreviewContent').innerHTML;
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>FrameCalc Zaagplan</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'DM Mono',monospace; color:#111; padding:16px; background:white; }
+  @media print { @page { size:A4 portrait; margin:12mm; } }
+  .ps-header { display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #111; padding-bottom:10px; margin-bottom:16px; }
+  .ps-title { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:4px; line-height:1; }
+  .ps-title span { color:#c8401a; }
+  .ps-subtitle { font-size:10px; letter-spacing:2px; color:#666; text-transform:uppercase; margin-top:4px; }
+  .ps-date { font-size:10px; color:#888; text-align:right; line-height:1.8; }
+  .ps-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+  .ps-section-title { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:#888; margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid #ddd; }
+  .ps-box { border:1px solid #ddd; border-radius:4px; padding:12px; margin-bottom:12px; }
+  .ps-box table { width:100%; border-collapse:collapse; }
+  .ps-box th { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:#888; text-align:left; padding:4px 6px; border-bottom:1px solid #ddd; }
+  .ps-box td { padding:6px; border-bottom:1px solid #f0f0f0; font-size:13px; }
+  .ps-box tr:last-child td { border-bottom:none; }
+  .big { font-size:18px; font-weight:bold; }
+  .lbl { font-size:10px; color:#888; display:block; margin-bottom:2px; }
+  .ps-diagram { text-align:center; margin-bottom:12px; }
+  .ps-diagram img { max-width:90%; border:1px solid #ddd; border-radius:4px; }
+  .ps-checklist { list-style:none; }
+  .ps-checklist li { padding:5px 0; border-bottom:1px solid #f0f0f0; font-size:12px; display:flex; align-items:center; gap:8px; }
+  .ps-checklist li::before { content:'☐'; font-size:14px; color:#888; flex-shrink:0; }
+  .ps-footer { border-top:1px solid #ddd; padding-top:8px; font-size:9px; color:#aaa; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; }
+</style></head><body>${content}</body></html>`;
+
+    const blob = new Blob([html], { type: 'text/html' });
+    const file = new File([blob], 'FrameCalc-zaagplan.html', { type: 'text/html' });
+
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'FrameCalc Zaagplan' });
+      } else {
+        // Fallback: share as URL (open in browser for printing)
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      }
+    } catch(e) {
+      if (e.name !== 'AbortError') window.print();
+    }
+  } else {
+    // Desktop: just print
+    window.print();
+  }
+}
+
+function hidePrintPreview() {
+  document.getElementById('printPreview').style.display = 'none';
+}
+
+function closePrintModal(e) {
+  if (e.target === document.getElementById('printModal')) {
+    document.getElementById('printModal').classList.remove('show');
+  }
+}
+
+// ── QR Code ───────────────────────────────────────────────────────
+let qrGenerated = false;
+function openQR() {
+  document.getElementById('qrModal').classList.add('show');
+  if (!qrGenerated) {
+    new QRCode(document.getElementById('qrCode'), {
+      text: 'https://wibo63.github.io/FrameCalc/',
+      width: 200, height: 200,
+      colorDark: '#000000', colorLight: '#ffffff',
+    });
+    qrGenerated = true;
+  }
+}
+function closeQR(e) {
+  if (e.target === document.getElementById('qrModal')) closeModal();
+}
+function closeModal() {
+  document.getElementById('qrModal').classList.remove('show');
+}
+
+// Live update on load
+window.addEventListener('load', () => {
+  document.getElementById('artW').value = '';
+  document.getElementById('artH').value = '';
+  document.getElementById('frameW').value = '';
+  document.getElementById('rebateD').value = '';
+  document.getElementById('rebateW').value = '';
+});
+</script>
+</body>
+</html>
