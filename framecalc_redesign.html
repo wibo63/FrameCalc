@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FrameCalc — Koolstraweb</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FrameCalc">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #f0f0f0;
+  --surface:   #ffffff;
+  --border:    #d8d8d8;
+  --wood:      #4a6fa5;
+  --wood2:     #2d4e7e;
+  --text:      #1a2332;
+  --muted:     #7a8a9a;
+  --result-bg: #e8edf4;
+  --input-bg:  #f8f8f8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 100; opacity: 0.3;
+}
+.grain-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.grain-bg::after {
+  content: ''; position: absolute; inset: -50%;
+  background: repeating-linear-gradient(92deg, transparent, transparent 60px, rgba(74,111,165,0.03) 60px, rgba(74,111,165,0.03) 61px);
+  transform: rotate(-3deg);
+}
+header {
+  position: relative; z-index: 10;
+  padding: 48px 24px 32px;
+  max-width: 680px; margin: 0 auto;
+}
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; margin-bottom: 24px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--wood); }
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(44px, 10vw, 72px);
+  letter-spacing: 4px; line-height: 1; color: var(--text); margin-bottom: 6px;
+}
+.logo span { color: var(--wood); }
+.tagline { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
+.divider { width: 100%; height: 1px; background: linear-gradient(90deg, var(--wood2), transparent); margin-bottom: 32px; }
+main { position: relative; z-index: 10; max-width: 680px; margin: 0 auto; padding: 0 24px 80px; }
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 24px; margin-bottom: 2px; position: relative; overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--wood); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+}
+.card:focus-within::before { transform: scaleX(1); }
+.card-title {
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+}
+.input-group { display: flex; flex-direction: column; gap: 10px; }
+.input-row { display: grid; grid-template-columns: 160px 1fr; align-items: center; gap: 12px; }
+.input-row label { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.input-row input {
+  padding: 10px 14px; background: var(--input-bg); border: 1px solid var(--border);
+  color: var(--text); font-family: 'DM Mono', monospace; font-size: 15px;
+  outline: none; transition: border-color 0.2s, background 0.2s; width: 100%;
+}
+.input-row input:focus { border-color: var(--wood); background: #fff; }
+.unit-row { display: grid; grid-template-columns: 160px 1fr; align-items: center; gap: 12px; }
+.unit-row label { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.unit-btns { display: flex; gap: 4px; }
+.unit-btn {
+  padding: 8px 16px; background: var(--input-bg); border: 1px solid var(--border);
+  color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px;
+  cursor: pointer; transition: all 0.15s; letter-spacing: 1px;
+}
+.unit-btn:hover { border-color: var(--wood); color: var(--wood); }
+.unit-btn.active { background: var(--wood); color: #fff; border-color: var(--wood); }
+.tip-box { background: var(--result-bg); border: 1px solid var(--border); padding: 14px; margin-top: 14px; }
+.tip-title { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.tip-box ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.tip-box li { font-size: 11px; color: var(--text); padding-left: 16px; position: relative; line-height: 1.6; }
+.tip-box li::before { content: '→'; position: absolute; left: 0; color: var(--wood); }
+.calc-btn {
+  width: 100%; padding: 16px; background: var(--wood2); color: #fff; border: none;
+  font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 5px;
+  cursor: pointer; transition: all 0.15s; margin-bottom: 2px; position: relative; z-index: 10;
+}
+.calc-btn:hover { background: var(--wood); }
+.calc-btn:active { transform: scale(0.995); }
+.results { display: none; }
+.results.show { display: block; }
+.result-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-top: 2px solid var(--wood); padding: 24px; margin-bottom: 2px;
+}
+.result-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 4px; color: var(--wood2); margin-bottom: 20px; }
+.diagram-wrap {
+  width: 100%; display: flex; justify-content: center; margin-bottom: 20px;
+  background: var(--result-bg); border: 1px solid var(--border); padding: 16px;
+}
+canvas { display: block; }
+.cut-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+.cut-table th {
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--muted); text-align: left; padding: 8px 10px;
+  border-bottom: 1px solid var(--border); background: var(--result-bg);
+}
+.cut-table td { padding: 12px 10px; font-size: 13px; border-bottom: 1px solid var(--border); }
+.cut-table tr:last-child td { border-bottom: none; }
+.cut-table .piece-label { color: var(--muted); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+.cut-table .dim { color: var(--wood2); font-weight: 500; font-size: 17px; }
+.cut-table .sub { color: var(--text); font-size: 11px; }
+.total-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 2px; }
+.total-box { background: var(--result-bg); border: 1px solid var(--border); padding: 14px 16px; }
+.total-box .tlabel { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.total-box .tval { font-size: 19px; font-weight: 500; color: var(--wood2); }
+.print-btn {
+  width: 100%; padding: 13px; background: none; border: 1px solid var(--border);
+  color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.15s;
+  margin-bottom: 2px; display: none;
+}
+.print-btn.show { display: block; }
+.print-btn:hover { border-color: var(--wood); color: var(--wood); }
+.error { background: #fff0ee; border: 1px solid #e0b0a8; padding: 12px 16px; color: #a03020; font-size: 12px; margin-bottom: 12px; }
+.share-btn {
+  position: fixed; bottom: 24px; right: 20px; width: 48px; height: 48px;
+  border-radius: 50%; background: var(--wood2); border: none; font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(45,78,126,0.25); transition: transform 0.15s, background 0.15s; z-index: 100;
+}
+.share-btn:hover { transform: scale(1.08); background: var(--wood); }
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(26,35,50,0.7);
+  z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--wood);
+  padding: 32px 28px; display: flex; flex-direction: column; align-items: center;
+  gap: 16px; max-width: 300px; width: 90%; animation: popIn 0.2s ease;
+}
+@keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 4px; color: var(--wood2); }
+.modal-subtitle { font-size: 10px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; }
+#qrCode { background: white; padding: 12px; border: 1px solid var(--border); }
+.modal-url { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-align: center; word-break: break-all; }
+.modal-close {
+  padding: 10px 28px; background: none; border: 1px solid var(--border);
+  color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px;
+  cursor: pointer; letter-spacing: 2px; text-transform: uppercase; transition: all 0.15s;
+}
+.modal-close:hover { border-color: var(--wood); color: var(--wood); }
+#printPreview { display: none; width: 100%; margin-bottom: 24px; }
+.print-preview-bar {
+  background: var(--result-bg); border: 1px solid var(--border); padding: 12px 16px;
+  margin-bottom: 2px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.print-preview-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); }
+.print-preview-btns { display: flex; gap: 6px; }
+.btn-print {
+  background: var(--wood2); border: none; color: #fff; font-family: 'DM Mono', monospace;
+  font-size: 11px; padding: 8px 18px; cursor: pointer; letter-spacing: 1px; transition: background 0.15s;
+}
+.btn-print:hover { background: var(--wood); }
+.btn-close-preview {
+  background: none; border: 1px solid var(--border); color: var(--muted);
+  font-family: 'DM Mono', monospace; font-size: 11px; padding: 8px 14px; cursor: pointer; transition: all 0.15s;
+}
+.btn-close-preview:hover { border-color: var(--wood); color: var(--wood); }
+footer {
+  position: relative; z-index: 10; border-top: 1px solid var(--border);
+  padding: 20px 24px; max-width: 680px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+}
+.footer-brand { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 3px; color: var(--muted); }
+.footer-brand span { color: var(--wood); }
+.footer-note { font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+header { animation: fadeUp 0.5s ease both; }
+/* Print styles */
+@media print {
+  @page { size: A4 portrait; margin: 10mm; }
+  body > * { display: none !important; }
+  #printPreview { display: block !important; width: 100% !important; max-width: 100% !important; }
+  #printPreview > div:first-child { display: none !important; }
+  #printPreviewContent { padding: 0 !important; border: none !important; background: white !important; color: #111 !important; }
+}
+.ps-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1a2332; padding-bottom: 10px; margin-bottom: 20px; }
+.ps-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 4px; color: #1a2332; line-height: 1; }
+.ps-title span { color: #2d4e7e; }
+.ps-subtitle { font-size: 10px; letter-spacing: 2px; color: #7a8a9a; text-transform: uppercase; margin-top: 4px; }
+.ps-date { font-size: 10px; color: #7a8a9a; text-align: right; line-height: 1.8; }
+.ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.ps-section-title { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: #7a8a9a; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #d8d8d8; }
+.ps-box { border: 1px solid #d8d8d8; padding: 14px; margin-bottom: 14px; }
+.ps-box table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ps-box th { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #7a8a9a; text-align: left; padding: 5px 8px; border-bottom: 1px solid #d8d8d8; }
+.ps-box td { padding: 8px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+.ps-box tr:last-child td { border-bottom: none; }
+.big { font-size: 20px; font-weight: bold; color: #2d4e7e; }
+.lbl { font-size: 10px; color: #7a8a9a; display: block; margin-bottom: 2px; }
+.ps-diagram { text-align: center; margin-bottom: 16px; }
+.ps-diagram img, .ps-diagram canvas { max-width: 100%; border: 1px solid #d8d8d8; }
+.ps-footer { border-top: 1px solid #d8d8d8; padding-top: 8px; font-size: 9px; color: #7a8a9a; letter-spacing: 1px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
+.ps-checklist { list-style: none; }
+.ps-checklist li { padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 12px; display: flex; align-items: center; gap: 10px; }
+.ps-checklist li::before { content: '☐'; font-size: 16px; color: #7a8a9a; flex-shrink: 0; }
+@media (max-width: 520px) {
+  header { padding: 32px 16px 24px; }
+  main { padding: 0 16px 60px; }
+  .input-row { grid-template-columns: 1fr; gap: 6px; }
+  .unit-row { grid-template-columns: 1fr; gap: 6px; }
+  .total-row { grid-template-columns: 1fr; }
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type=number] { -moz-appearance: textfield; }
+</style>
+</head>
+<body>
+<div class="grain-bg"></div>
+<header>
+  <a class="back-link" href="https://koolstraweb.nl">← Koolstraweb</a>
+  <div class="logo">FRAME<span>CALC</span></div>
+  <div class="tagline">Schilderijlijst maten calculator — 45° verstek</div>
+  <div class="divider"></div>
+</header>
+<main>
+  <div class="card">
+    <div class="card-title">Eenheid</div>
+    <div class="unit-row">
+      <label>Maat in</label>
+      <div class="unit-btns">
+        <button class="unit-btn active" onclick="setUnit('mm',this)">mm</button>
+        <button class="unit-btn" onclick="setUnit('cm',this)">cm</button>
+        <button class="unit-btn" onclick="setUnit('inch',this)">inch</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Afmetingen in te lijsten werk</div>
+    <div class="input-group">
+      <div class="input-row"><label>Breedte werk</label><input type="number" id="artW" placeholder="400" min="1" oninput="liveCalc()"></div>
+      <div class="input-row"><label>Hoogte werk</label><input type="number" id="artH" placeholder="300" min="1" oninput="liveCalc()"></div>
+      <div class="input-row"><label>Marge per kant</label><input type="number" id="margin" placeholder="2" min="0" value="2" oninput="liveCalc()"></div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">Marge</div>
+      <ul><li>Extra speelruimte per kant zodat het werk makkelijk in de lijst past</li></ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Lijstprofiel</div>
+    <div class="input-group">
+      <div class="input-row"><label>Dikte lijst</label><input type="number" id="frameT" placeholder="18" min="1" oninput="liveCalc()"></div>
+      <div class="input-row"><label>Breedte lijst</label><input type="number" id="frameW" placeholder="40" min="1" oninput="liveCalc()"></div>
+      <div class="input-row"><label>Inkeping diepte</label><input type="number" id="rebateD" placeholder="5" min="0" oninput="liveCalc()"></div>
+      <div class="input-row"><label>Inkeping breedte</label><input type="number" id="rebateW" placeholder="10" min="0" oninput="liveCalc()"></div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-title">Uitleg profiel</div>
+      <ul>
+        <li><strong>Breedte lijst</strong> — totale breedte van het lijstprofiel</li>
+        <li><strong>Inkeping diepte</strong> — hoe diep het werk in de lijst valt</li>
+        <li><strong>Inkeping breedte</strong> — hoe ver het werk onder de lijst valt (overlap)</li>
+      </ul>
+    </div>
+  </div>
+  <button class="calc-btn" onclick="calculate()">BEREKEN MATEN</button>
+  <button class="print-btn" id="printBtn" onclick="showPrintPreview()">🖨 Toon printvoorbeeld</button>
+  <div class="results" id="results"></div>
+  <div id="printPreview">
+    <div class="print-preview-bar">
+      <span class="print-preview-label">Printvoorbeeld</span>
+      <div class="print-preview-btns">
+        <button class="btn-print" onclick="printOrShare()">🖨 Afdrukken / Delen</button>
+        <button class="btn-close-preview" onclick="hidePrintPreview()">✕</button>
+      </div>
+    </div>
+    <div id="printPreviewContent" style="background:white;color:#111;padding:24px;border:1px solid var(--border);font-family:'DM Mono',monospace;"></div>
+  </div>
+  <div id="printSheet" style="display:none"></div>
+</main>
+<footer>
+  <div class="footer-brand">KOOLSTRA<span>WEB</span></div>
+  <div class="footer-note">Werkplaats tools</div>
+</footer>
+<button class="share-btn" onclick="openQR()" title="Deel app">⬡</button>
+<div class="modal-overlay" id="qrModal" onclick="closeQR(event)">
+  <div class="modal-box">
+    <div class="modal-title">DEEL APP</div>
+    <div class="modal-subtitle">Scan met je telefoon</div>
+    <div id="qrCode"></div>
+    <div class="modal-url">koolstraweb.nl/FrameCalc</div>
+    <button class="modal-close" onclick="closeModal()">Sluiten</button>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+let unit = 'mm';
+function setUnit(u, btn) {
+  unit = u;
+  document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  liveCalc();
+}
+function unitLabel() { return unit; }
+function fmt(v) {
+  if (unit === 'mm') return Math.round(v * 10) / 10 + ' mm';
+  if (unit === 'cm') return Math.round(v / 10 * 10) / 10 + ' cm';
+  return Math.round(v / 25.4 * 100) / 100 + '"';
+}
+function fmtShort(v) {
+  if (unit === 'mm') return (Math.round(v * 10) / 10) + '';
+  if (unit === 'cm') return (Math.round(v / 10 * 10) / 10) + '';
+  return (Math.round(v / 25.4 * 100) / 100) + '';
+}
+function toMm(v) {
+  if (unit === 'cm') return v * 10;
+  if (unit === 'inch') return v * 25.4;
+  return v;
+}
+function liveCalc() {
+  const artW = parseFloat(document.getElementById('artW').value);
+  const artH = parseFloat(document.getElementById('artH').value);
+  const frameW = parseFloat(document.getElementById('frameW').value);
+  if (artW && artH && frameW) calculate(true);
+}
+function calculate(silent = false) {
+  const artW_raw = parseFloat(document.getElementById('artW').value);
+  const artH_raw = parseFloat(document.getElementById('artH').value);
+  const frameW_raw = parseFloat(document.getElementById('frameW').value);
+  const frameT_raw = parseFloat(document.getElementById('frameT').value) || 0;
+  const rebateD_raw = parseFloat(document.getElementById('rebateD').value) || 0;
+  const rebateWv_raw = parseFloat(document.getElementById('rebateW').value) || 0;
+  const margin_raw = parseFloat(document.getElementById('margin').value) || 0;
+  const results = document.getElementById('results');
+  if (!artW_raw || !artH_raw || !frameW_raw) {
+    if (!silent) results.innerHTML = '<div class="error">Vul minimaal de breedte, hoogte en lijstbreedte in.</div>';
+    return;
+  }
+  const artW_orig = toMm(artW_raw), artH_orig = toMm(artH_raw);
+  const marginMm = toMm(margin_raw);
+  const artW = artW_orig + 2*marginMm, artH = artH_orig + 2*marginMm;
+  const frameW = toMm(frameW_raw), frameT = toMm(frameT_raw), rebateWmm = toMm(rebateWv_raw);
+  const hSP = artW - 2*rebateWmm, vSP = artH - 2*rebateWmm;
+  const hLP = hSP + 2*frameW, vLP = vSP + 2*frameW;
+  const totalLength = 2*(hLP+3) + 2*(vLP+3);
+  const benodigdeLat = frameT > 0 ? Math.ceil(totalLength/10)*10 : null;
+  results.innerHTML = '';
+  results.classList.add('show');
+  const div = document.createElement('div');
+  div.className = 'result-card';
+  div.innerHTML = `
+    <div class="result-title">ZAAGMATEN — 45° VERSTEK</div>
+    <div class="diagram-wrap"><canvas id="frameDiagram"></canvas></div>
+    <table class="cut-table">
+      <thead><tr><th>Stuk</th><th>Aantal</th><th>Korte punt (SP)</th><th>Lange punt (LP)</th></tr></thead>
+      <tbody>
+        <tr><td><span class="piece-label">Horizontaal</span><br><span class="sub">Boven &amp; onder</span></td><td>2×</td><td><span class="dim">${fmt(hSP)}</span></td><td><span class="dim">${fmt(hLP)}</span></td></tr>
+        <tr><td><span class="piece-label">Verticaal</span><br><span class="sub">Links &amp; rechts</span></td><td>2×</td><td><span class="dim">${fmt(vSP)}</span></td><td><span class="dim">${fmt(vLP)}</span></td></tr>
+      </tbody>
+    </table>
+    <div class="total-row">
+      <div class="total-box"><div class="tlabel">Totale lijstlengte</div><div class="tval">${fmt(totalLength)}</div></div>
+      <div class="total-box"><div class="tlabel">Buitenmaat lijst</div><div class="tval">${fmtShort(hLP)} × ${fmtShort(vLP)} ${unitLabel()}</div></div>
+    </div>
+    ${frameT > 0 ? `<div class="total-row" style="margin-top:2px"><div class="total-box"><div class="tlabel">Profielafmeting</div><div class="tval">${fmt(frameW)} × ${fmt(frameT)}</div></div><div class="total-box"><div class="tlabel">Benodigde lat</div><div class="tval">${fmt(frameT)} × ${fmt(frameW)} × ${fmt(benodigdeLat)}</div></div></div>` : ''}
+    ${rebateWmm > 0 ? `<div class="total-row" style="margin-top:2px"><div class="total-box" style="grid-column:1/-1"><div class="tlabel">Opening (zichtbaar werk)</div><div class="tval">${fmt(hSP)} × ${fmt(vSP)}</div></div></div>` : ''}
+    <div class="tip-box" style="margin-top:16px">
+      <div class="tip-title">Verstek tips</div>
+      <ul>
+        <li>Meet altijd aan de <strong>korte punt</strong> (binnenkant) voor nauwkeurigheid</li>
+        <li>Zaag eerst één hoek, meet dan de tegenovergestelde zijde af</li>
+        <li>Maak een proeflijst van goedkoop hout voor je de echte lijst zaagt</li>
+        <li>Korte punt = binnenmaat, lange punt = binnenmaat + 2× lijstbreedte</li>
+        ${rebateD_raw > 0 ? `<li>Inkeping ${fmt(toMm(rebateD_raw))} diep — zorg dat het werk goed valt vóór het lijmen</li>` : ''}
+      </ul>
+    </div>`;
+  results.appendChild(div);
+  requestAnimationFrame(() => drawDiagram('frameDiagram', artW, artH, frameW, rebateWmm, hSP, hLP, vSP, vLP));
+  results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  document.getElementById('printBtn').classList.add('show');
+  buildPrintSheet(artW_orig, artH_orig, marginMm, frameW, frameT, rebateWmm, hSP, hLP, vSP, vLP, totalLength);
+}
+function drawDiagram(id, artW, artH, frameW, rebateW, hSP, hLP, vSP, vLP) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const maxW = Math.min(580, window.innerWidth - 80);
+  const scale = Math.min(maxW / (artW + 2*frameW), 260 / (artH + 2*frameW));
+  const W = (artW + 2*frameW)*scale, H = (artH + 2*frameW)*scale, pad = 44;
+  canvas.width = W + pad*2; canvas.height = H + pad*2;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const ox=pad, oy=pad, fw=frameW*scale, aw=artW*scale, ah=artH*scale, rw=rebateW*scale;
+  // Frame
+  ctx.fillStyle = '#c8a96a'; ctx.fillRect(ox, oy, W, H);
+  // Mitre lines
+  ctx.strokeStyle = '#7a5a1a'; ctx.lineWidth = 1.5;
+  [[ox,oy,ox+fw,oy+fw],[ox+W,oy,ox+W-fw,oy+fw],[ox,oy+H,ox+fw,oy+H-fw],[ox+W,oy+H,ox+W-fw,oy+H-fw]].forEach(([x1,y1,x2,y2]) => { ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
+  if (rw > 0) { ctx.fillStyle = '#a88040'; ctx.fillRect(ox+fw-rw, oy+fw-rw, aw+2*rw, ah+2*rw); }
+  // Opening
+  ctx.fillStyle = '#e8edf4'; ctx.strokeStyle = '#b0bec8'; ctx.lineWidth = 1;
+  ctx.fillRect(ox+fw, oy+fw, aw, ah); ctx.strokeRect(ox+fw, oy+fw, aw, ah);
+  // Label
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#4a6fa5'; ctx.font = `${Math.max(9,Math.min(13,aw*0.08))}px DM Mono,monospace`;
+  ctx.fillText('WERK', ox+fw+aw/2, oy+fw+ah/2-8);
+  ctx.fillStyle = '#7a8a9a'; ctx.font = `${Math.max(8,Math.min(11,aw*0.06))}px DM Mono,monospace`;
+  ctx.fillText(`${fmtShort(artW)} × ${fmtShort(artH)} ${unitLabel()}`, ox+fw+aw/2, oy+fw+ah/2+8);
+  // LP bottom
+  ctx.strokeStyle = '#2d4e7e'; ctx.lineWidth = 1.5; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(ox, oy+H+12); ctx.lineTo(ox+W, oy+H+12); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox, oy+H+8); ctx.lineTo(ox, oy+H+16); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox+W, oy+H+8); ctx.lineTo(ox+W, oy+H+16); ctx.stroke();
+  // SP bottom
+  ctx.strokeStyle = '#6b8cba'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(ox+fw, oy+H+22); ctx.lineTo(ox+fw+aw, oy+H+22); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(ox+fw, oy+H+18); ctx.lineTo(ox+fw, oy+H+26); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox+fw+aw, oy+H+18); ctx.lineTo(ox+fw+aw, oy+H+26); ctx.stroke();
+  ctx.font = '9px DM Mono,monospace'; ctx.textAlign = 'center';
+  ctx.fillStyle = '#2d4e7e'; ctx.fillText(`LP: ${fmt(hLP)}`, ox+W/2, oy+H+26);
+  ctx.fillStyle = '#6b8cba'; ctx.fillText(`SP: ${fmt(hSP)}`, ox+fw+aw/2, oy+H+36);
+  // Right side labels
+  ctx.save(); ctx.translate(ox+W+18, oy+H/2); ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#2d4e7e'; ctx.font = '9px DM Mono,monospace'; ctx.textAlign = 'center';
+  ctx.fillText(`LP: ${fmt(vLP)}`, 0, 0); ctx.restore();
+  ctx.save(); ctx.translate(ox+W+30, oy+fw+ah/2); ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#6b8cba'; ctx.font = '9px DM Mono,monospace'; ctx.textAlign = 'center';
+  ctx.fillText(`SP: ${fmt(vSP)}`, 0, 0); ctx.restore();
+  // Legend
+  ctx.font = '9px DM Mono,monospace'; ctx.textAlign = 'left';
+  ctx.fillStyle = '#2d4e7e'; ctx.fillText('■', ox, oy+H+48);
+  ctx.fillStyle = '#7a8a9a'; ctx.fillText(' Lange punt (LP)', ox+10, oy+H+48);
+  ctx.fillStyle = '#6b8cba'; ctx.fillText('■', ox+130, oy+H+48);
+  ctx.fillStyle = '#7a8a9a'; ctx.fillText(' Korte punt (SP)', ox+140, oy+H+48);
+}
+function drawPrintDiagram(id, artW, artH, frameW, rebateW, hSP, hLP, vSP, vLP) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const scale = Math.min(280/(artW+2*frameW), 130/(artH+2*frameW));
+  const W=(artW+2*frameW)*scale, H=(artH+2*frameW)*scale, pad=40;
+  canvas.width=W+pad*2; canvas.height=H+pad*2;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='white'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  const ox=pad,oy=pad,fw=frameW*scale,aw=(artW-2*rebateW)*scale,ah=(artH-2*rebateW)*scale,rw=rebateW*scale;
+  ctx.fillStyle='#c8a96a'; ctx.fillRect(ox,oy,W,H);
+  ctx.strokeStyle='#7a5a1a'; ctx.lineWidth=1.5;
+  [[ox,oy,ox+fw,oy+fw],[ox+W,oy,ox+W-fw,oy+fw],[ox,oy+H,ox+fw,oy+H-fw],[ox+W,oy+H,ox+W-fw,oy+H-fw]].forEach(([x1,y1,x2,y2])=>{ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();});
+  if(rw>0){ctx.fillStyle='#a88040';ctx.fillRect(ox+fw-rw,oy+fw-rw,aw+2*rw,ah+2*rw);}
+  ctx.fillStyle='#e8edf4';ctx.strokeStyle='#aaa';ctx.lineWidth=1;
+  ctx.fillRect(ox+fw,oy+fw,aw,ah);ctx.strokeRect(ox+fw,oy+fw,aw,ah);
+  ctx.fillStyle='#1a2332';ctx.font=`bold ${Math.max(9,Math.min(12,aw*0.07))}px DM Mono,monospace`;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('WERK',ox+fw+aw/2,oy+fw+ah/2-7);
+  ctx.font=`${Math.max(8,Math.min(10,aw*0.055))}px DM Mono,monospace`;
+  ctx.fillText(`${fmtShort(artW)} × ${fmtShort(artH)} ${unitLabel()}`,ox+fw+aw/2,oy+fw+ah/2+7);
+  ctx.strokeStyle='#2d4e7e';ctx.lineWidth=1.5;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(ox,oy+H+12);ctx.lineTo(ox+W,oy+H+12);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,oy+H+8);ctx.lineTo(ox,oy+H+16);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox+W,oy+H+8);ctx.lineTo(ox+W,oy+H+16);ctx.stroke();
+  ctx.fillStyle='#2d4e7e';ctx.font='bold 10px DM Mono,monospace';ctx.textAlign='center';
+  ctx.fillText(`LP: ${fmt(hLP)}`,ox+W/2,oy+H+26);
+  ctx.strokeStyle='#6b8cba';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(ox+fw,oy+H+36);ctx.lineTo(ox+fw+aw,oy+H+36);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(ox+fw,oy+H+32);ctx.lineTo(ox+fw,oy+H+40);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox+fw+aw,oy+H+32);ctx.lineTo(ox+fw+aw,oy+H+40);ctx.stroke();
+  ctx.fillStyle='#6b8cba';ctx.fillText(`SP: ${fmt(hSP)}`,ox+fw+aw/2,oy+H+50);
+  ctx.save();ctx.strokeStyle='#2d4e7e';ctx.lineWidth=1.5;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(ox+W+12,oy);ctx.lineTo(ox+W+12,oy+H);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox+W+8,oy);ctx.lineTo(ox+W+16,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox+W+8,oy+H);ctx.lineTo(ox+W+16,oy+H);ctx.stroke();
+  ctx.translate(ox+W+26,oy+H/2);ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='#2d4e7e';ctx.font='bold 10px DM Mono,monospace';ctx.textAlign='center';
+  ctx.fillText(`LP: ${fmt(vLP)}`,0,0);ctx.restore();
+  ctx.save();ctx.strokeStyle='#6b8cba';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(ox+W+36,oy+fw);ctx.lineTo(ox+W+36,oy+fw+ah);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(ox+W+32,oy+fw);ctx.lineTo(ox+W+40,oy+fw);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox+W+32,oy+fw+ah);ctx.lineTo(ox+W+40,oy+fw+ah);ctx.stroke();
+  ctx.translate(ox+W+48,oy+fw+ah/2);ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='#6b8cba';ctx.font='10px DM Mono,monospace';ctx.textAlign='center';
+  ctx.fillText(`SP: ${fmt(vSP)}`,0,0);ctx.restore();
+}
+function buildPrintSheet(artW_orig, artH_orig, marginMm, frameW, frameT, rebateWmm, hSP, hLP, vSP, vLP, totalLength) {
+  const now = new Date().toLocaleDateString('nl-NL', {day:'2-digit',month:'2-digit',year:'numeric'});
+  document.getElementById('printSheet').innerHTML = `
+    <div class="ps-header">
+      <div><div class="ps-title">FRAME<span>CALC</span></div><div class="ps-subtitle">Schilderijlijst — 45° verstek zaagplan</div></div>
+      <div class="ps-date"><div>Datum: ${now}</div><div>Eenheid: ${unitLabel()}</div></div>
+    </div>
+    <div class="ps-grid">
+      <div class="ps-box"><div class="ps-section-title">Invoer afmetingen</div><table>
+        <tr><td><span class="lbl">Werk breedte</span><strong>${fmt(artW_orig)}</strong></td></tr>
+        <tr><td><span class="lbl">Werk hoogte</span><strong>${fmt(artH_orig)}</strong></td></tr>
+        ${marginMm>0?`<tr><td><span class="lbl">Marge per kant</span><strong>${fmt(marginMm)}</strong></td></tr>`:''}
+        <tr><td><span class="lbl">Lijstbreedte</span><strong>${fmt(frameW)}</strong></td></tr>
+        ${rebateWmm>0?`<tr><td><span class="lbl">Inkeping breedte</span><strong>${fmt(rebateWmm)}</strong></td></tr>`:''}
+      </table></div>
+      <div class="ps-box"><div class="ps-section-title">Materiaallijst</div><table>
+        <tr><td><span class="lbl">Totale lijstlengte</span><strong class="big">${fmt(totalLength)}</strong></td></tr>
+        <tr><td><span class="lbl">Buitenmaat lijst</span><strong>${fmt(hLP)} × ${fmt(vLP)}</strong></td></tr>
+        ${frameT>0?`<tr><td><span class="lbl">Profielafmeting</span><strong>${fmt(frameW)} × ${fmt(frameT)}</strong></td></tr>`:''}
+        <tr><td><span class="lbl">Aantal stukken</span><strong>4 stuks</strong></td></tr>
+      </table></div>
+    </div>
+    <div class="ps-box"><div class="ps-section-title">Zaagmaten — 45° verstek</div>
+      <table><thead><tr><th>Stuk</th><th>Aantal</th><th>Korte punt (SP)</th><th>Lange punt (LP)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Horizontaal</strong><br><span style="font-size:11px;color:#7a8a9a">Boven &amp; onder</span></td><td>2×</td><td class="big">${fmt(hSP)}</td><td class="big">${fmt(hLP)}</td></tr>
+        <tr><td><strong>Verticaal</strong><br><span style="font-size:11px;color:#7a8a9a">Links &amp; rechts</span></td><td>2×</td><td class="big">${fmt(vSP)}</td><td class="big">${fmt(vLP)}</td></tr>
+      </tbody></table>
+    </div>
+    <div class="ps-diagram"><div class="ps-section-title" style="text-align:left">Diagram</div><canvas id="printDiagram"></canvas></div>
+    <div class="ps-box"><ul class="ps-checklist">
+      <li>Stel verstekzaag in op 45°</li>
+      <li>Zaag proefstukje en controleer hoek</li>
+      <li>Zaag horizontale stukken — SP: ${fmt(hSP)} / LP: ${fmt(hLP)}</li>
+      <li>Zaag verticale stukken — SP: ${fmt(vSP)} / LP: ${fmt(vLP)}</li>
+      <li>Pas samen droog (zonder lijm) — controleer haaksheid</li>
+      <li>Lijm en span op met hoekspanner of band</li>
+      <li>Laat minimaal 30 minuten uitharden</li>
+      ${rebateWmm>0?`<li>Inkeping ${fmt(rebateWmm)} breed — werk valt ${fmt(rebateWmm)} onder de lijst</li>`:''}
+    </ul></div>
+    <div class="ps-footer"><span>FrameCalc — koolstraweb.nl/FrameCalc</span><span>SP = korte punt · LP = lange punt</span></div>`;
+  requestAnimationFrame(() => drawPrintDiagram('printDiagram', artW_orig+2*marginMm, artH_orig+2*marginMm, frameW, rebateWmm, hSP, hLP, vSP, vLP));
+}
+function showPrintPreview() {
+  const diagramImg = document.getElementById('printDiagram')?.toDataURL('image/png') || '';
+  let html = document.getElementById('printSheet').innerHTML.replace(/<canvas[^>]*id="printDiagram"[^>]*><\/canvas>/g, `<img src="${diagramImg}" style="max-width:100%;border:1px solid #d8d8d8;">`);
+  document.getElementById('printPreviewContent').innerHTML = html;
+  document.getElementById('printPreview').style.display = 'block';
+  document.getElementById('printPreview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+async function printOrShare() {
+  if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>FrameCalc Zaagplan</title></head><body style="font-family:monospace;padding:16px">${document.getElementById('printPreviewContent').innerHTML}</body></html>`;
+    const blob = new Blob([html], {type:'text/html'});
+    const file = new File([blob], 'FrameCalc-zaagplan.html', {type:'text/html'});
+    try {
+      if (navigator.canShare?.({files:[file]})) await navigator.share({files:[file], title:'FrameCalc Zaagplan'});
+      else window.open(URL.createObjectURL(blob), '_blank');
+    } catch(e) { if (e.name !== 'AbortError') window.print(); }
+  } else { window.print(); }
+}
+function hidePrintPreview() { document.getElementById('printPreview').style.display = 'none'; }
+let qrGenerated = false;
+function openQR() {
+  document.getElementById('qrModal').classList.add('show');
+  if (!qrGenerated) {
+    new QRCode(document.getElementById('qrCode'), {text:'https://koolstraweb.nl/FrameCalc/', width:180, height:180, colorDark:'#1a2332', colorLight:'#ffffff'});
+    qrGenerated = true;
+  }
+}
+function closeQR(e) { if (e.target === document.getElementById('qrModal')) closeModal(); }
+function closeModal() { document.getElementById('qrModal').classList.remove('show'); }
+window.addEventListener('load', () => {
+  ['artW','artH','frameW','rebateD','rebateW'].forEach(id => document.getElementById(id).value = '');
+});
+</script>
+</body>
+</html>
